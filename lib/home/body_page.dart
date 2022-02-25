@@ -38,11 +38,13 @@ class _BodyPageState extends State<BodyPage> {
     if (index == _currentPage.floor()) {
       var scale = 1 - (_currentPage - index) * (1 - _pageOffset);
       var trans = _height * (1 - scale) / 2;
+      matrix = Matrix4.diagonal3Values(1, scale, 1);
       matrix = Matrix4.diagonal3Values(1, scale, 1)
         ..setTranslationRaw(0, trans, 0);
     } else if (index == _currentPage.floor() + 1) {
       var scale = _pageOffset - (_currentPage - index + 1) * (1 - _pageOffset);
       var trans = _height * (1 - scale) / 2;
+      matrix = Matrix4.diagonal3Values(1, scale, 1);
       matrix = Matrix4.diagonal3Values(1, scale, 1)
         ..setTranslationRaw(0, trans, 0);
     } else if (index == _currentPage.floor() - 1) {
@@ -53,6 +55,7 @@ class _BodyPageState extends State<BodyPage> {
     } else {
       var scale = 0.8;
       var trans = _height * (1 - scale) / 2;
+      matrix = Matrix4.diagonal3Values(1, scale, 1);
       matrix = Matrix4.diagonal3Values(1, scale, 1)
         ..setTranslationRaw(0, trans, 0);
     }
@@ -162,6 +165,7 @@ class _BodyPageState extends State<BodyPage> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      //Slider section
       Container(
         height: Dimensions.pageView,
         child: PageView.builder(
@@ -169,6 +173,7 @@ class _BodyPageState extends State<BodyPage> {
             itemCount: 5,
             itemBuilder: (context, index) => _buildPageItem(index)),
       ),
+      //DOTS indicator section
       DotsIndicator(
         dotsCount: 5,
         position: _currentPage,
@@ -179,6 +184,166 @@ class _BodyPageState extends State<BodyPage> {
           activeShape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
         ),
+      ),
+      SizedBox(height: Dimensions.height10),
+      Container(
+          margin: EdgeInsets.only(left: Dimensions.width20),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              BigText(text: 'Popular Uploads'),
+              SizedBox(width: Dimensions.width10),
+              Container(
+                margin: const EdgeInsets.only(bottom: 3),
+                child: BigText(
+                  text: ".",
+                  color: Colors.black26,
+                ),
+              ),
+              SizedBox(
+                height: Dimensions.height10,
+              ),
+              Container(
+                margin: const EdgeInsets.only(bottom: 3),
+                child: SmallText(
+                  text: 'Food Pairing',
+                  color: Color(0xFF979797),
+                ),
+              )
+            ],
+          )),
+      Container(
+        height: 900,
+        child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            // shrinkWrap: true,
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return Container(
+                margin: EdgeInsets.only(
+                    left: Dimensions.width20,
+                    right: Dimensions.width10,
+                    bottom: Dimensions.height10),
+                child: Row(
+                  children: [
+                    Container(
+                      height: Dimensions.listViewImg,
+                      width: Dimensions.listViewImg,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radius20),
+                        color: Colors.white38,
+                        image: DecorationImage(
+                            image: AssetImage('assets/image/food0.png')),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: Dimensions.listViewTextContent,
+                        padding: EdgeInsets.only(left: Dimensions.width5),
+                        margin: EdgeInsets.only(
+                            left: Dimensions.width10,
+                            bottom: Dimensions.height10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(Dimensions.radius20),
+                              bottomRight:
+                                  Radius.circular(Dimensions.radius20)),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: Dimensions.width10,
+                              right: Dimensions.width10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              BigText(text: 'Makanan Enak'),
+                              SizedBox(
+                                height: Dimensions.height10,
+                              ),
+                              SmallText(text: 'Cino polos kyk livy'),
+                              SizedBox(
+                                height: Dimensions.height10,
+                              ),
+                              Row(
+                                children: [
+                                  IconAndText(
+                                    icon: Icons.circle_sharp,
+                                    text: 'Normal',
+                                    IconColor: AppColors.iconColor1,
+                                  ),
+                                  IconAndText(
+                                      icon: Icons.location_on,
+                                      text: '1.7km',
+                                      IconColor: AppColors.mainColor),
+                                  IconAndText(
+                                      icon: Icons.access_time_rounded,
+                                      text: '32min ',
+                                      IconColor: AppColors.iconColor2),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       BigText(text: 'Recipient Shite'),
+                    //       SizedBox(height: Dimensions.height10),
+                    //       Row(
+                    //         children: [
+                    //           Wrap(
+                    //             children: <Widget>[
+                    //               ...List.generate(
+                    //                   5,
+                    //                   (index) => Icon(
+                    //                         Icons.star,
+                    //                         color: AppColors.yellowColor,
+                    //                         size: 15,
+                    //                       )),
+                    //             ],
+                    //           ),
+                    //           SizedBox(width: Dimensions.width10),
+                    //           SmallText(text: '4.5'),
+                    //           SizedBox(width: Dimensions.width10),
+                    //           SmallText(text: '1287'),
+                    //           SizedBox(width: Dimensions.width10),
+                    //           SmallText(text: 'Comment')
+                    //         ],
+                    //       ),
+                    //       SizedBox(
+                    //         height: Dimensions.height10,
+                    //       ),
+                    //       Row(
+                    //         children: [
+                    //           IconAndText(
+                    //             icon: Icons.circle_sharp,
+                    //             text: 'Normal',
+                    //             IconColor: AppColors.iconColor1,
+                    //           ),
+                    //           SizedBox(width: Dimensions.width10),
+                    //           IconAndText(
+                    //               icon: Icons.location_on,
+                    //               text: '1.7km',
+                    //               IconColor: AppColors.mainColor),
+                    //           SizedBox(width: Dimensions.width10),
+                    //           IconAndText(
+                    //               icon: Icons.access_time_rounded,
+                    //               text: '32min ',
+                    //               IconColor: AppColors.iconColor2),
+                    //         ],
+                    //       )
+                    //     ],
+                    //   ),
+                    // )
+                  ],
+                ),
+              );
+            }),
       )
     ]);
   }

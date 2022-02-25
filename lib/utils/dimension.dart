@@ -17,6 +17,7 @@ class Dimensions {
   static double height45 = screenHeight / 18.76;
 
 // WIDTH FOR MARGIN AND PADDING
+  static double width5 = screenHeight / (844 / 5);
   static double width10 = screenHeight / 84.4;
   static double width15 = screenHeight / 56.27;
   static double width20 = screenHeight / 42.2;
@@ -29,4 +30,9 @@ class Dimensions {
 
   //ICON SIZE
   static double iconSize24 = screenHeight / 35.17;
+  static double iconSize12 = screenHeight / (35.17 / 2);
+
+  //LIST VIEW img
+  static double listViewImg = screenWidth / 3.25;
+  static double listViewTextContent = screenWidth / 3.9;
 }

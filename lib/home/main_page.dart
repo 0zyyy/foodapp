@@ -60,7 +60,10 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
           ),
-          BodyPage(),
+          Expanded(
+              child: SingleChildScrollView(
+            child: BodyPage(),
+          )),
         ],
       ),
     );
