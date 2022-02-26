@@ -71,7 +71,7 @@ class _BodyPageState extends State<BodyPage> {
               color: Colors.blue,
               image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: AssetImage('assets/image/food0.png'))),
+                  image: AssetImage('assets/image/food${index}.png'))),
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -212,139 +212,83 @@ class _BodyPageState extends State<BodyPage> {
               )
             ],
           )),
-      Container(
-        height: 900,
-        child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            // shrinkWrap: true,
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Container(
-                margin: EdgeInsets.only(
-                    left: Dimensions.width20,
-                    right: Dimensions.width10,
-                    bottom: Dimensions.height10),
-                child: Row(
-                  children: [
-                    Container(
-                      height: Dimensions.listViewImg,
-                      width: Dimensions.listViewImg,
+      ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: EdgeInsets.only(
+                  left: Dimensions.width20,
+                  right: Dimensions.width10,
+                  bottom: Dimensions.height10),
+              child: Row(
+                children: [
+                  Container(
+                    height: Dimensions.listViewImg,
+                    width: Dimensions.listViewImg,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(Dimensions.radius20),
+                      color: Colors.white38,
+                      image: DecorationImage(
+                          image: AssetImage('assets/image/food0.png')),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: Dimensions.listViewTextContent,
+                      padding: EdgeInsets.only(left: Dimensions.width5),
+                      margin: EdgeInsets.only(
+                          left: Dimensions.width10,
+                          bottom: Dimensions.height10),
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(Dimensions.radius20),
-                        color: Colors.white38,
-                        image: DecorationImage(
-                            image: AssetImage('assets/image/food0.png')),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(Dimensions.radius20),
+                            bottomRight: Radius.circular(Dimensions.radius20)),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: Dimensions.width10,
+                            right: Dimensions.width10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            BigText(text: 'Livy Kok Hot'),
+                            SizedBox(
+                              height: Dimensions.height10,
+                            ),
+                            SmallText(text: 'Cino polos kyk livy'),
+                            SizedBox(
+                              height: Dimensions.height10,
+                            ),
+                            Row(
+                              children: [
+                                IconAndText(
+                                  icon: Icons.circle_sharp,
+                                  text: 'Normal',
+                                  IconColor: AppColors.iconColor1,
+                                ),
+                                IconAndText(
+                                    icon: Icons.location_on,
+                                    text: '1.7km',
+                                    IconColor: AppColors.mainColor),
+                                IconAndText(
+                                    icon: Icons.access_time_rounded,
+                                    text: '32min ',
+                                    IconColor: AppColors.iconColor2),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        height: Dimensions.listViewTextContent,
-                        padding: EdgeInsets.only(left: Dimensions.width5),
-                        margin: EdgeInsets.only(
-                            left: Dimensions.width10,
-                            bottom: Dimensions.height10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(Dimensions.radius20),
-                              bottomRight:
-                                  Radius.circular(Dimensions.radius20)),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              left: Dimensions.width10,
-                              right: Dimensions.width10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              BigText(text: 'Makanan Enak'),
-                              SizedBox(
-                                height: Dimensions.height10,
-                              ),
-                              SmallText(text: 'Cino polos kyk livy'),
-                              SizedBox(
-                                height: Dimensions.height10,
-                              ),
-                              Row(
-                                children: [
-                                  IconAndText(
-                                    icon: Icons.circle_sharp,
-                                    text: 'Normal',
-                                    IconColor: AppColors.iconColor1,
-                                  ),
-                                  IconAndText(
-                                      icon: Icons.location_on,
-                                      text: '1.7km',
-                                      IconColor: AppColors.mainColor),
-                                  IconAndText(
-                                      icon: Icons.access_time_rounded,
-                                      text: '32min ',
-                                      IconColor: AppColors.iconColor2),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       BigText(text: 'Recipient Shite'),
-                    //       SizedBox(height: Dimensions.height10),
-                    //       Row(
-                    //         children: [
-                    //           Wrap(
-                    //             children: <Widget>[
-                    //               ...List.generate(
-                    //                   5,
-                    //                   (index) => Icon(
-                    //                         Icons.star,
-                    //                         color: AppColors.yellowColor,
-                    //                         size: 15,
-                    //                       )),
-                    //             ],
-                    //           ),
-                    //           SizedBox(width: Dimensions.width10),
-                    //           SmallText(text: '4.5'),
-                    //           SizedBox(width: Dimensions.width10),
-                    //           SmallText(text: '1287'),
-                    //           SizedBox(width: Dimensions.width10),
-                    //           SmallText(text: 'Comment')
-                    //         ],
-                    //       ),
-                    //       SizedBox(
-                    //         height: Dimensions.height10,
-                    //       ),
-                    //       Row(
-                    //         children: [
-                    //           IconAndText(
-                    //             icon: Icons.circle_sharp,
-                    //             text: 'Normal',
-                    //             IconColor: AppColors.iconColor1,
-                    //           ),
-                    //           SizedBox(width: Dimensions.width10),
-                    //           IconAndText(
-                    //               icon: Icons.location_on,
-                    //               text: '1.7km',
-                    //               IconColor: AppColors.mainColor),
-                    //           SizedBox(width: Dimensions.width10),
-                    //           IconAndText(
-                    //               icon: Icons.access_time_rounded,
-                    //               text: '32min ',
-                    //               IconColor: AppColors.iconColor2),
-                    //         ],
-                    //       )
-                    //     ],
-                    //   ),
-                    // )
-                  ],
-                ),
-              );
-            }),
-      )
+                  )
+                ],
+              ),
+            );
+          })
     ]);
   }
 }
