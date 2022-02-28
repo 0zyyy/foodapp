@@ -8,7 +8,9 @@ class Dimensions {
   static double pageViewContainer = screenHeight / 3.84;
   static double pageViewTextContainer = screenHeight / 7.03;
 
+  static double font16 = screenHeight / 52.75;
   static double font20 = screenHeight / 42.2;
+  static double font26 = screenHeight / 32.46;
   // HEIGHT for margin and padding
   static double height10 = screenHeight / 84.4;
   static double height15 = screenHeight / 56.27;
@@ -30,9 +32,16 @@ class Dimensions {
 
   //ICON SIZE
   static double iconSize24 = screenHeight / 35.17;
+  static double iconSize16 = screenHeight / 52.75;
   static double iconSize12 = screenHeight / (35.17 / 2);
 
   //LIST VIEW img
   static double listViewImg = screenWidth / 3.25;
   static double listViewTextContent = screenWidth / 3.9;
+
+  //FOOD PAGE DETAIL
+  static double PopularImgSize = screenHeight / 2.41;
+
+  //BOTTOM NAVBAR HEIGHT
+  static double NavbarHeight = screenHeight / 7.03;
 }

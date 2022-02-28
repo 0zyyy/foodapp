@@ -107,7 +107,6 @@ class _BodyPageState extends State<BodyPage> {
                   left: Dimensions.width15,
                   right: Dimensions.width15),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   BigText(text: 'Chinese Food'),
@@ -231,7 +230,7 @@ class _BodyPageState extends State<BodyPage> {
                       borderRadius: BorderRadius.circular(Dimensions.radius20),
                       color: Colors.white38,
                       image: DecorationImage(
-                          image: AssetImage('assets/image/food0.png')),
+                          image: AssetImage('assets/image/food1.png')),
                     ),
                   ),
                   Expanded(

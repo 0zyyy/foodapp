@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/home/main_page.dart';
+import 'package:foodapp/pages/food/popular_food_detail.dart';
+import 'package:foodapp/pages/food/recom_food_detail.dart';
+import 'package:foodapp/pages/home/main_page.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:foodapp/helper/dependencies.dart' as dp;
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dp.init();
   runApp(const MyApp());
 }
 
@@ -26,7 +31,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MainPage(),
+      home: const RecomDetail(),
     );
   }
 }
