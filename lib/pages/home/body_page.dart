@@ -1,10 +1,17 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:foodapp/controllers/populer_product_controllers.dart';
+import 'package:foodapp/controllers/rekom_product_controllers.dart';
+import 'package:foodapp/data/repository/popular_product_repo.dart';
+import 'package:foodapp/models/product_model.dart';
+import 'package:foodapp/pages/food/popular_food_detail.dart';
+import 'package:foodapp/utils/app_const.dart';
 import 'package:foodapp/utils/colors.dart';
 import 'package:foodapp/utils/dimension.dart';
 import 'package:foodapp/widgets/big_text.dart';
 import 'package:foodapp/widgets/icon_and_text.dart';
 import 'package:foodapp/widgets/small_text.dart';
+import 'package:get/get.dart';
 
 class BodyPage extends StatefulWidget {
   const BodyPage({Key? key}) : super(key: key);
@@ -33,7 +40,7 @@ class _BodyPageState extends State<BodyPage> {
     pageController.dispose();
   }
 
-  Widget _buildPageItem(int index) {
+  Widget _buildPageItem(int index, ProductModel popularProduct) {
     Matrix4 matrix = Matrix4.identity();
     if (index == _currentPage.floor()) {
       var scale = 1 - (_currentPage - index) * (1 - _pageOffset);
@@ -71,7 +78,9 @@ class _BodyPageState extends State<BodyPage> {
               color: Colors.blue,
               image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: AssetImage('assets/image/food${index}.png'))),
+                  image: NetworkImage(AppConstatns.BASE_URL +
+                      '/uploads/' +
+                      popularProduct.img!))),
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -109,14 +118,14 @@ class _BodyPageState extends State<BodyPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BigText(text: 'Chinese Food'),
+                  BigText(text: popularProduct.name!),
                   SizedBox(height: Dimensions.height10),
                   Row(
                     children: [
                       Wrap(
                         children: <Widget>[
                           ...List.generate(
-                              5,
+                              popularProduct.stars!,
                               (index) => Icon(
                                     Icons.star,
                                     color: AppColors.yellowColor,
@@ -125,7 +134,7 @@ class _BodyPageState extends State<BodyPage> {
                         ],
                       ),
                       SizedBox(width: Dimensions.width10),
-                      SmallText(text: '4.5'),
+                      SmallText(text: popularProduct.stars!.toString()),
                       SizedBox(width: Dimensions.width10),
                       SmallText(text: '1287'),
                       SizedBox(width: Dimensions.width10),
@@ -165,32 +174,51 @@ class _BodyPageState extends State<BodyPage> {
   Widget build(BuildContext context) {
     return Column(children: [
       //Slider section
-      Container(
-        height: Dimensions.pageView,
-        child: PageView.builder(
-            controller: pageController,
-            itemCount: 5,
-            itemBuilder: (context, index) => _buildPageItem(index)),
-      ),
+      GetBuilder<PopulerProductControllers>(builder: (popularProduct) {
+        return popularProduct.isLoading
+            ? Container(
+                height: Dimensions.pageView,
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(() => PopularFoodPageDetail());
+                  },
+                  child: PageView.builder(
+                      controller: pageController,
+                      itemCount: popularProduct.popularProductList.length,
+                      itemBuilder: (context, index) => _buildPageItem(
+                          index, popularProduct.popularProductList[index])),
+                ),
+              )
+            : CircularProgressIndicator(
+                color: AppColors.mainColor,
+              );
+      }),
       //DOTS indicator section
-      DotsIndicator(
-        dotsCount: 5,
-        position: _currentPage,
-        decorator: DotsDecorator(
-          activeColor: AppColors.mainColor,
-          size: const Size.square(9.0),
-          activeSize: const Size(18.0, 9.0),
-          activeShape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-        ),
+      GetBuilder<PopulerProductControllers>(builder: (popularProducts) {
+        return DotsIndicator(
+            dotsCount: popularProducts.popularProductList.length <= 0
+                ? 1
+                : popularProducts.popularProductList.length,
+            position: _currentPage,
+            decorator: DotsDecorator(
+              activeColor: AppColors.mainColor,
+              size: const Size.square(9.0),
+              activeSize: const Size(18.0, 9.0),
+              activeShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)),
+            ));
+      }),
+      // POPULAR section
+      SizedBox(
+        height: Dimensions.height10,
       ),
-      SizedBox(height: Dimensions.height10),
       Container(
-          margin: EdgeInsets.only(left: Dimensions.width20),
+          margin: EdgeInsets.only(
+              left: Dimensions.width20, top: Dimensions.height10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              BigText(text: 'Popular Uploads'),
+              BigText(text: 'Rekomendasi'),
               SizedBox(width: Dimensions.width10),
               Container(
                 margin: const EdgeInsets.only(bottom: 3),
@@ -211,83 +239,102 @@ class _BodyPageState extends State<BodyPage> {
               )
             ],
           )),
-      ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return Container(
-              margin: EdgeInsets.only(
-                  left: Dimensions.width20,
-                  right: Dimensions.width10,
-                  bottom: Dimensions.height10),
-              child: Row(
-                children: [
-                  Container(
-                    height: Dimensions.listViewImg,
-                    width: Dimensions.listViewImg,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      color: Colors.white38,
-                      image: DecorationImage(
-                          image: AssetImage('assets/image/food1.png')),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: Dimensions.listViewTextContent,
-                      padding: EdgeInsets.only(left: Dimensions.width5),
-                      margin: EdgeInsets.only(
-                          left: Dimensions.width10,
-                          bottom: Dimensions.height10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(Dimensions.radius20),
-                            bottomRight: Radius.circular(Dimensions.radius20)),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: Dimensions.width10,
-                            right: Dimensions.width10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
+      GetBuilder<RekomProdukController>(builder: (rekomProduk) {
+        return rekomProduk.isLoading
+            ? Container(
+                child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: rekomProduk.rekomProdukList.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: EdgeInsets.only(
+                          left: Dimensions.width20,
+                          right: Dimensions.width10,
+                          bottom: Dimensions.height10,
+                        ),
+                        child: Row(
                           children: [
-                            BigText(text: 'Livy Kok Hot'),
-                            SizedBox(
-                              height: Dimensions.height10,
+                            Container(
+                              height: Dimensions.listViewImg,
+                              width: Dimensions.listViewImg,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(Dimensions.radius20),
+                                color: Colors.white38,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(AppConstatns.BASE_URL +
+                                        '/uploads/' +
+                                        rekomProduk
+                                            .rekomProdukList[index].img)),
+                              ),
                             ),
-                            SmallText(text: 'Cino polos kyk livy'),
-                            SizedBox(
-                              height: Dimensions.height10,
-                            ),
-                            Row(
-                              children: [
-                                IconAndText(
-                                  icon: Icons.circle_sharp,
-                                  text: 'Normal',
-                                  IconColor: AppColors.iconColor1,
+                            Expanded(
+                              child: Container(
+                                height: Dimensions.listViewTextContent,
+                                padding:
+                                    EdgeInsets.only(left: Dimensions.width5),
+                                margin: EdgeInsets.only(
+                                    left: Dimensions.width10,
+                                    bottom: Dimensions.height10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topRight:
+                                          Radius.circular(Dimensions.radius15),
+                                      bottomRight:
+                                          Radius.circular(Dimensions.radius15)),
                                 ),
-                                IconAndText(
-                                    icon: Icons.location_on,
-                                    text: '1.7km',
-                                    IconColor: AppColors.mainColor),
-                                IconAndText(
-                                    icon: Icons.access_time_rounded,
-                                    text: '32min ',
-                                    IconColor: AppColors.iconColor2),
-                              ],
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(left: Dimensions.width10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      BigText(
+                                          text: rekomProduk
+                                              .rekomProdukList[index].name),
+                                      SizedBox(
+                                        height: Dimensions.height10,
+                                      ),
+                                      SmallText(text: 'Bakekok'),
+                                      SizedBox(
+                                        height: Dimensions.height10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          IconAndText(
+                                            icon: Icons.circle_sharp,
+                                            text: 'Normal',
+                                            IconColor: AppColors.iconColor1,
+                                          ),
+                                          IconAndText(
+                                              icon: Icons.location_on,
+                                              text: '1.7km',
+                                              IconColor: AppColors.mainColor),
+                                          IconAndText(
+                                              icon: Icons.access_time_rounded,
+                                              text: '32min ',
+                                              IconColor: AppColors.iconColor2),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
                             )
                           ],
                         ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            );
-          })
+                      );
+                    }),
+              )
+            : CircularProgressIndicator(
+                color: AppColors.mainColor,
+              );
+      }),
     ]);
   }
 }
