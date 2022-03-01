@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:foodapp/utils/app_const.dart';
 import 'package:get/get_connect.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
@@ -11,7 +12,8 @@ class ApiClient extends GetConnect implements GetxService {
     required this.appBaseUrl,
   }) {
     baseUrl = appBaseUrl;
-    timeout = Duration(seconds: 30);
+    timeout = const Duration(seconds: 30);
+    token = AppConstatns.TOKEN;
     _mainHeader = {
       'Content-Type': 'application/json; chartset=UTF-8',
       'Authorization': 'Bearer $token',
