@@ -5,6 +5,7 @@ import 'package:foodapp/controllers/rekom_product_controllers.dart';
 import 'package:foodapp/data/repository/popular_product_repo.dart';
 import 'package:foodapp/models/product_model.dart';
 import 'package:foodapp/pages/food/popular_food_detail.dart';
+import 'package:foodapp/routes/routes_helper.dart';
 import 'package:foodapp/utils/app_const.dart';
 import 'package:foodapp/utils/colors.dart';
 import 'package:foodapp/utils/dimension.dart';
@@ -21,7 +22,7 @@ class BodyPage extends StatefulWidget {
 }
 
 class _BodyPageState extends State<BodyPage> {
-  PageController pageController = PageController(viewportFraction: 0.85);
+  PageController pageController = PageController(viewportFraction: 0.80);
   var _currentPage = 0.0;
   double _pageOffset = 0.8;
   double _height = Dimensions.pageViewContainer;
@@ -41,46 +42,52 @@ class _BodyPageState extends State<BodyPage> {
   }
 
   Widget _buildPageItem(int index, ProductModel popularProduct) {
-    Matrix4 matrix = Matrix4.identity();
+    Matrix4 matrix = new Matrix4.identity();
     if (index == _currentPage.floor()) {
-      var scale = 1 - (_currentPage - index) * (1 - _pageOffset);
-      var trans = _height * (1 - scale) / 2;
-      matrix = Matrix4.diagonal3Values(1, scale, 1);
-      matrix = Matrix4.diagonal3Values(1, scale, 1)
+      var currScale = 1 - (_currentPage - index) * (1 - _pageOffset);
+      var trans = _height * (1 - currScale) / 2;
+      matrix = Matrix4.diagonal3Values(1, currScale, 1)
         ..setTranslationRaw(0, trans, 0);
     } else if (index == _currentPage.floor() + 1) {
-      var scale = _pageOffset - (_currentPage - index + 1) * (1 - _pageOffset);
-      var trans = _height * (1 - scale) / 2;
-      matrix = Matrix4.diagonal3Values(1, scale, 1);
-      matrix = Matrix4.diagonal3Values(1, scale, 1)
+      var currScale =
+          _pageOffset + (_currentPage - index + 1) * (1 - _pageOffset);
+      var trans = _height * (1 - currScale) / 2;
+
+      matrix = Matrix4.diagonal3Values(1, currScale, 1)
         ..setTranslationRaw(0, trans, 0);
     } else if (index == _currentPage.floor() - 1) {
-      var scale = 1 - (_currentPage - index) * (1 - _pageOffset);
-      var trans = _height * (1 - scale) / 2;
-      matrix = Matrix4.diagonal3Values(1, scale, 1)
+      var currScale =
+          _pageOffset + (_currentPage - index - 1) * (1 - _pageOffset);
+      var trans = _height * (1 - currScale) / 2;
+
+      matrix = Matrix4.diagonal3Values(1, currScale, 1)
         ..setTranslationRaw(0, trans, 0);
     } else {
-      var scale = 0.8;
-      var trans = _height * (1 - scale) / 2;
-      matrix = Matrix4.diagonal3Values(1, scale, 1);
-      matrix = Matrix4.diagonal3Values(1, scale, 1)
+      var currScale = 0.8;
+      var trans = _height * (1 - currScale) / 2;
+      matrix = Matrix4.diagonal3Values(1, currScale, 1)
         ..setTranslationRaw(0, trans, 0);
     }
     return Transform(
       transform: matrix,
       child: Stack(children: [
-        Container(
-          height: Dimensions.pageViewContainer,
-          margin: EdgeInsets.only(
-              left: Dimensions.width10, right: Dimensions.width10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(Dimensions.radius30),
-              color: Colors.blue,
-              image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(AppConstatns.BASE_URL +
-                      '/uploads/' +
-                      popularProduct.img!))),
+        GestureDetector(
+          onTap: () {
+            Get.toNamed(RoutesHelper.getPopularPage(index));
+          },
+          child: Container(
+            height: Dimensions.pageViewContainer,
+            margin: EdgeInsets.only(
+                left: Dimensions.width10, right: Dimensions.width10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(Dimensions.radius30),
+                color: Colors.blue,
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(AppConstatns.BASE_URL +
+                        '/uploads/' +
+                        popularProduct.img!))),
+          ),
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -176,18 +183,14 @@ class _BodyPageState extends State<BodyPage> {
       //Slider section
       GetBuilder<PopulerProductControllers>(builder: (popularProduct) {
         return popularProduct.isLoading
+            // ignore: sized_box_for_whitespace
             ? Container(
                 height: Dimensions.pageView,
-                child: GestureDetector(
-                  onTap: () {
-                    Get.to(() => PopularFoodPageDetail());
-                  },
-                  child: PageView.builder(
-                      controller: pageController,
-                      itemCount: popularProduct.popularProductList.length,
-                      itemBuilder: (context, index) => _buildPageItem(
-                          index, popularProduct.popularProductList[index])),
-                ),
+                child: PageView.builder(
+                    controller: pageController,
+                    itemCount: popularProduct.popularProductList.length,
+                    itemBuilder: (context, index) => _buildPageItem(
+                        index, popularProduct.popularProductList[index])),
               )
             : CircularProgressIndicator(
                 color: AppColors.mainColor,
@@ -230,13 +233,6 @@ class _BodyPageState extends State<BodyPage> {
               SizedBox(
                 height: Dimensions.height10,
               ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 3),
-                child: SmallText(
-                  text: 'Food Pairing',
-                  color: Color(0xFF979797),
-                ),
-              )
             ],
           )),
       GetBuilder<RekomProdukController>(builder: (rekomProduk) {
@@ -255,19 +251,25 @@ class _BodyPageState extends State<BodyPage> {
                         ),
                         child: Row(
                           children: [
-                            Container(
-                              height: Dimensions.listViewImg,
-                              width: Dimensions.listViewImg,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(Dimensions.radius20),
-                                color: Colors.white38,
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(AppConstatns.BASE_URL +
-                                        '/uploads/' +
-                                        rekomProduk
-                                            .rekomProdukList[index].img)),
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed(RoutesHelper.getRekomenPage(index));
+                              },
+                              child: Container(
+                                height: Dimensions.listViewImg,
+                                width: Dimensions.listViewImg,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.radius20),
+                                  color: Colors.white38,
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                          AppConstatns.BASE_URL +
+                                              '/uploads/' +
+                                              rekomProduk
+                                                  .rekomProdukList[index].img)),
+                                ),
                               ),
                             ),
                             Expanded(
