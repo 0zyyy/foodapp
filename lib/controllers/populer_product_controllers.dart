@@ -14,6 +14,8 @@ class PopulerProductControllers extends GetxController {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  int _quantity = 0;
+  int get quantity => _quantity;
   Future<void> getPopularProductList() async {
     Response response = await popularProductRepo.getPopularProductList();
     if (response.statusCode != null) {
@@ -28,5 +30,26 @@ class PopulerProductControllers extends GetxController {
     } else {
       print('object not found');
     }
+  }
+
+  void setQuantity(bool isTambah) {
+    if (isTambah) {
+      print('tambah');
+      _quantity = cekQuantity(_quantity + 1);
+    } else {
+      print('kurang');
+      _quantity = cekQuantity(_quantity - 1);
+    }
+    update();
+  }
+
+  int cekQuantity(int quantity) {
+    if (quantity <= 0) {
+      return 0;
+    } else if (quantity > 20) {
+      return 20;
+    }
+    update();
+    return quantity;
   }
 }
