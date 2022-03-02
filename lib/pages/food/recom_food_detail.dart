@@ -1,25 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:foodapp/controllers/rekom_product_controllers.dart';
+import 'package:foodapp/routes/routes_helper.dart';
+import 'package:foodapp/utils/app_const.dart';
 import 'package:foodapp/utils/colors.dart';
 import 'package:foodapp/utils/dimension.dart';
 import 'package:foodapp/widgets/app_icon.dart';
 import 'package:foodapp/widgets/big_text.dart';
 import 'package:foodapp/widgets/expandable_text.dart';
+import 'package:get/get.dart';
 
 class RecomDetail extends StatelessWidget {
-  const RecomDetail({Key? key}) : super(key: key);
+  int pageId;
+  RecomDetail({Key? key, required this.pageId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print(pageId);
+    var produk = Get.find<RekomProdukController>().rekomProdukList[pageId];
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            automaticallyImplyLeading: false,
             toolbarHeight: 80,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppIcon(icon: Icons.arrow_back_ios),
-                AppIcon(icon: Icons.close_outlined),
+                GestureDetector(
+                    onTap: () {
+                      Get.toNamed(RoutesHelper.getInitial());
+                    },
+                    child: AppIcon(icon: Icons.arrow_back_ios)),
+                AppIcon(icon: Icons.shopping_cart_outlined),
               ],
             ),
             bottom: PreferredSize(
@@ -33,7 +45,7 @@ class RecomDetail extends StatelessWidget {
                 child: Center(
                     child: BigText(
                   size: Dimensions.font26,
-                  text: 'BAEKOK BUNDA MASZ',
+                  text: produk.name,
                 )),
                 width: double.maxFinite,
                 padding: EdgeInsets.only(top: 5, bottom: 10),
@@ -43,9 +55,8 @@ class RecomDetail extends StatelessWidget {
             backgroundColor: AppColors.yellowColor,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
-                background: Image.asset(
-              'assets/image/food1.png',
-              width: double.maxFinite,
+                background: Image.network(
+              AppConstatns.BASE_URL + '/uploads/' + produk.img,
               fit: BoxFit.cover,
             )),
           ),
@@ -55,9 +66,7 @@ class RecomDetail extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(
                       left: Dimensions.width20, right: Dimensions.width20),
-                  child: ExpandableText(
-                      text:
-                          'BAKEKOK BUNDA MAS BAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MASBAKEKOK BUNDA MAS'),
+                  child: ExpandableText(text: produk.description),
                 ),
               ],
             ),
@@ -79,7 +88,7 @@ class RecomDetail extends StatelessWidget {
               SizedBox(
                 width: Dimensions.width20,
               ),
-              BigText(text: "\$ 12.88" + " X " + "0"),
+              BigText(text: "\$ ${produk.price}" + " X " + "0"),
               SizedBox(
                 width: Dimensions.width20,
               ),
