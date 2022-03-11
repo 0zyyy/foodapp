@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foodapp/controllers/cart_product_controller.dart';
+import 'package:foodapp/controllers/populer_product_controllers.dart';
 import 'package:foodapp/controllers/rekom_product_controllers.dart';
 import 'package:foodapp/routes/routes_helper.dart';
 import 'package:foodapp/utils/app_const.dart';
@@ -17,6 +19,8 @@ class RecomDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     print(pageId);
     var produk = Get.find<RekomProdukController>().rekomProdukList[pageId];
+    Get.find<PopulerProductControllers>()
+        .initProduct(produk, Get.find<CartController>());
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -31,7 +35,38 @@ class RecomDetail extends StatelessWidget {
                       Get.toNamed(RoutesHelper.getInitial());
                     },
                     child: AppIcon(icon: Icons.arrow_back_ios)),
-                AppIcon(icon: Icons.shopping_cart_outlined),
+                GetBuilder<PopulerProductControllers>(builder: (controller) {
+                  return Stack(
+                    children: [
+                      AppIcon(icon: Icons.shopping_cart_outlined),
+                      Get.find<PopulerProductControllers>().getTotalItems >= 1
+                          ? Positioned(
+                              top: 0,
+                              right: 0,
+                              child: AppIcon(
+                                icon: Icons.circle,
+                                size: 20,
+                                iconColor: Colors.transparent,
+                                backgroundColor: AppColors.mainColor,
+                              ),
+                            )
+                          : Container(),
+                      Get.find<PopulerProductControllers>().getTotalItems >= 1
+                          ? Positioned(
+                              top: 3,
+                              right: 3,
+                              child: BigText(
+                                size: 12,
+                                color: Colors.white,
+                                text: Get.find<PopulerProductControllers>()
+                                    .getTotalItems
+                                    .toString(),
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  );
+                }),
               ],
             ),
             bottom: PreferredSize(
@@ -73,77 +108,99 @@ class RecomDetail extends StatelessWidget {
           )
         ],
       ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AppIcon(
-                icon: Icons.remove,
-                backgroundColor: AppColors.mainColor,
-                iconColor: Colors.white,
-                iconSize: Dimensions.iconSize24,
-              ),
-              SizedBox(
-                width: Dimensions.width20,
-              ),
-              BigText(text: "\$ ${produk.price}" + " X " + "0"),
-              SizedBox(
-                width: Dimensions.width20,
-              ),
-              AppIcon(
-                icon: Icons.add,
-                backgroundColor: AppColors.mainColor,
-                iconColor: Colors.white,
-                iconSize: Dimensions.iconSize24,
-              ),
-            ],
-          ),
-          Container(
-            height: Dimensions.NavbarHeight,
-            padding: EdgeInsets.only(
-                top: Dimensions.height30,
-                bottom: Dimensions.height30,
-                left: Dimensions.width20,
-                right: Dimensions.width20),
-            margin: EdgeInsets.only(
-                left: Dimensions.width10, right: Dimensions.width10),
-            decoration: BoxDecoration(
-              color: AppColors.buttonBackgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(Dimensions.radius20 * 2),
-                topRight: Radius.circular(Dimensions.radius20 * 2),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      bottomNavigationBar:
+          GetBuilder<PopulerProductControllers>(builder: (controller) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.favorite,
-                  size: Dimensions.iconSize24,
-                  color: AppColors.mainColor,
-                ),
-                Container(
-                  padding: EdgeInsets.only(
-                      top: Dimensions.height20,
-                      bottom: Dimensions.height20,
-                      right: Dimensions.width20,
-                      left: Dimensions.width20),
-                  decoration: BoxDecoration(
-                    color: AppColors.mainColor,
-                    borderRadius: BorderRadius.circular(Dimensions.radius20),
+                GestureDetector(
+                  onTap: () {
+                    controller.setQuantity(false);
+                  },
+                  child: AppIcon(
+                    icon: Icons.remove,
+                    backgroundColor: AppColors.mainColor,
+                    iconColor: Colors.white,
+                    iconSize: Dimensions.iconSize24,
                   ),
-                  child: BigText(
-                    text: 'X28.1 Tambah',
-                    color: Colors.white,
+                ),
+                SizedBox(
+                  width: Dimensions.width20,
+                ),
+                BigText(
+                    text: "\$ ${produk.price}" +
+                        " X " +
+                        "${controller.inCartItem}"),
+                SizedBox(
+                  width: Dimensions.width20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    controller.setQuantity(true);
+                  },
+                  child: AppIcon(
+                    icon: Icons.add,
+                    backgroundColor: AppColors.mainColor,
+                    iconColor: Colors.white,
+                    iconSize: Dimensions.iconSize24,
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
+            Container(
+              height: Dimensions.NavbarHeight,
+              padding: EdgeInsets.only(
+                  top: Dimensions.height30,
+                  bottom: Dimensions.height30,
+                  left: Dimensions.width20,
+                  right: Dimensions.width20),
+              margin: EdgeInsets.only(
+                  left: Dimensions.width10, right: Dimensions.width10),
+              decoration: BoxDecoration(
+                color: AppColors.buttonBackgroundColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(Dimensions.radius20 * 2),
+                  topRight: Radius.circular(Dimensions.radius20 * 2),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    Icons.favorite,
+                    size: Dimensions.iconSize24,
+                    color: AppColors.mainColor,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      controller.addItem(produk);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          top: Dimensions.height20,
+                          bottom: Dimensions.height20,
+                          right: Dimensions.width20,
+                          left: Dimensions.width20),
+                      decoration: BoxDecoration(
+                        color: AppColors.mainColor,
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radius20),
+                      ),
+                      child: BigText(
+                        text: '\$ ${produk.price!} Tambah',
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }
