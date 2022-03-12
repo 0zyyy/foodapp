@@ -35,7 +35,8 @@ class CartController extends GetxController {
             img: value.img,
             quantity: value.quantity! + quantity,
             isExist: true,
-            time: DateTime.now().toIso8601String());
+            time: DateTime.now().toIso8601String(),
+            product: produk);
       });
       if (totalQuantity <= 0) {
         _items.remove(produk.id);
@@ -48,14 +49,14 @@ class CartController extends GetxController {
               ' Sebanyak ' +
               quantity.toString());
           return CartModel(
-            id: produk.id,
-            name: produk.name,
-            price: produk.price,
-            img: produk.img,
-            quantity: quantity,
-            isExist: true,
-            time: DateTime.now().toIso8601String(),
-          );
+              id: produk.id,
+              name: produk.name,
+              price: produk.price,
+              img: produk.img,
+              quantity: quantity,
+              isExist: true,
+              time: DateTime.now().toIso8601String(),
+              product: produk);
         });
       } else {
         Get.snackbar('Ada Masalah', 'Silahkan menambahkan kuantitas',
@@ -67,6 +68,7 @@ class CartController extends GetxController {
             colorText: Colors.white);
       }
     }
+    update();
   }
 
   bool existInCart(ProductModel produk) {
@@ -95,5 +97,9 @@ class CartController extends GetxController {
       total += value.quantity!;
     });
     return total;
+  }
+
+  List<CartModel> get getItems {
+    return _items.entries.map((cart) => cart.value).toList();
   }
 }
