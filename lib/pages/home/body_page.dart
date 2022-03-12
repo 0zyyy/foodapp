@@ -73,7 +73,7 @@ class _BodyPageState extends State<BodyPage> {
       child: Stack(children: [
         GestureDetector(
           onTap: () {
-            Get.toNamed(RoutesHelper.getPopularPage(index));
+            Get.toNamed(RoutesHelper.getPopularPage(index, 'home'));
           },
           child: Container(
             height: Dimensions.pageViewContainer,
@@ -253,7 +253,8 @@ class _BodyPageState extends State<BodyPage> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Get.toNamed(RoutesHelper.getRekomenPage(index));
+                                Get.toNamed(RoutesHelper.getRekomenPage(
+                                    index, 'rekomen'));
                               },
                               child: Container(
                                 height: Dimensions.listViewImg,

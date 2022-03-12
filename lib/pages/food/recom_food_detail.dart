@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foodapp/controllers/cart_product_controller.dart';
 import 'package:foodapp/controllers/populer_product_controllers.dart';
 import 'package:foodapp/controllers/rekom_product_controllers.dart';
+import 'package:foodapp/pages/cart/cart_pages.dart';
 import 'package:foodapp/routes/routes_helper.dart';
 import 'package:foodapp/utils/app_const.dart';
 import 'package:foodapp/utils/colors.dart';
@@ -13,7 +14,9 @@ import 'package:get/get.dart';
 
 class RecomDetail extends StatelessWidget {
   int pageId;
-  RecomDetail({Key? key, required this.pageId}) : super(key: key);
+  final String page;
+  RecomDetail({Key? key, required this.pageId, required this.page})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +35,21 @@ class RecomDetail extends StatelessWidget {
               children: [
                 GestureDetector(
                     onTap: () {
-                      Get.toNamed(RoutesHelper.getInitial());
+                      if (page == 'cartpage') {
+                        Get.toNamed(RoutesHelper.getCartPage());
+                      } else {
+                        Get.toNamed(RoutesHelper.getInitial());
+                      }
                     },
                     child: AppIcon(icon: Icons.arrow_back_ios)),
                 GetBuilder<PopulerProductControllers>(builder: (controller) {
                   return Stack(
                     children: [
-                      AppIcon(icon: Icons.shopping_cart_outlined),
+                      GestureDetector(
+                          onTap: () {
+                            Get.toNamed(RoutesHelper.getCartPage());
+                          },
+                          child: AppIcon(icon: Icons.shopping_cart_outlined)),
                       Get.find<PopulerProductControllers>().getTotalItems >= 1
                           ? Positioned(
                               top: 0,
