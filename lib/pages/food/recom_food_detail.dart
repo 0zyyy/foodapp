@@ -180,10 +180,13 @@ class RecomDetail extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    Icons.favorite,
-                    size: Dimensions.iconSize24,
-                    color: AppColors.mainColor,
+                  GestureDetector(
+                    onTap: () {},
+                    child: Icon(
+                      Icons.favorite,
+                      size: Dimensions.iconSize24,
+                      color: AppColors.mainColor,
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
