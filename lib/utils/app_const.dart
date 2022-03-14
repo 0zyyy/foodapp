@@ -6,4 +6,7 @@ class AppConstatns {
 
   //TOKEN
   static const String TOKEN = 'DBtoken';
+
+  //CART LIST
+  static const String CART = 'cart';
 }

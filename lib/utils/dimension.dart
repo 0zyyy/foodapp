@@ -39,6 +39,9 @@ class Dimensions {
   static double listViewImg = screenWidth / 3.25;
   static double listViewTextContent = screenWidth / 3.9;
 
+  //SPLASH SCREEN
+  static double splashScreen = screenHeight / 3.38;
+
   //FOOD PAGE DETAIL
   static double PopularImgSize = screenHeight / 2.41;
 
