@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:foodapp/data/repository/cart_product_repo.dart';
 import 'package:foodapp/models/cart_model.dart';
@@ -15,13 +17,7 @@ class CartController extends GetxController {
   int get cartCount => _cartCount;
   Map<int, CartModel> _items = {};
   Map<int, CartModel> get items => _items;
-  void increment() {
-    _cartCount++;
-  }
-
-  void decrement() {
-    _cartCount--;
-  }
+  List<CartModel> storageItems = [];
 
   void addItem(ProductModel produk, int quantity) {
     var totalQuantity = 0;
@@ -68,6 +64,7 @@ class CartController extends GetxController {
             colorText: Colors.white);
       }
     }
+    cartRepo.addToCartList(getItems);
     update();
   }
 
@@ -101,5 +98,25 @@ class CartController extends GetxController {
 
   List<CartModel> get getItems {
     return _items.entries.map((cart) => cart.value).toList();
+  }
+
+  int get totalAmounts {
+    var total = 0;
+    _items.forEach((key, value) {
+      total += value.price! * value.quantity!;
+    });
+    return total;
+  }
+
+  set setCart(List<CartModel> items) {
+    storageItems = items;
+    for (int i = 0; i < storageItems.length; i++) {
+      _items.putIfAbsent(storageItems[i].product!.id!, () => storageItems[i]);
+    }
+  }
+
+  List<CartModel> get getItemsByProduct {
+    setCart = cartRepo.getCartList();
+    return storageItems;
   }
 }
