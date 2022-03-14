@@ -39,6 +39,7 @@ class _BodyPageState extends State<BodyPage> {
   @override
   void dispose() {
     pageController.dispose();
+    super.dispose();
   }
 
   Widget _buildPageItem(int index, ProductModel popularProduct) {
